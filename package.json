@@ -1,0 +1,24 @@
+{
+  "name": "constructhangman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "conHangman.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/airetriton/constructHangman.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/airetriton/constructHangman/issues"
+  },
+  "homepage": "https://github.com/airetriton/constructHangman#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "request": "^2.83.0"
+  }
+}
