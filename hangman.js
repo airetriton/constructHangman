@@ -6,16 +6,11 @@ var validator = require("validatorjs");
 //create a JSON that holds words
 var gameWords = require("./wordsGame.js")
 
-//file that holds the guessed letters
-var letters = require("./letters.txt");
-
-
-// receive user input
-var userInput = process.argv[3];
-
+// receive user input *works*
+var userInput = process.argv[2];
 
 // word selected from gameWords
-var secretWord = "";
+var secretWord = gameWords[Math.floor(Math.random() * gameWords.length)];
 
 //breakup the secretWord into letters
 var lettersInSecretWord = [];
@@ -27,9 +22,6 @@ var numBlanks = 0;
 
 var blanksAndLetters = [];
 
-// holds the letters incorrectly guessed
-var lettersGuessed = "";
-
 //number of guesses per game
 var guessesTotal = 8;
 
@@ -37,11 +29,36 @@ var guessesTotal = 8;
 var winsCounter = 0;
 var lossCounter = 0;
 
+var schema = {
+	properties: {
+		pattern: /^[a-zA-Z\-]+$/,
+		message: "Selection must be only letters or spaces",
+		required: true
+	}
+};
+
+function startGame() {
+	prompt.start();
+
+	//create the game prompt.
+	prompt.get(schema, function (err,result) {
+		if(err){
+			return console.log(err);
+		}
+		
+
+
+
+	}
+	{
+		type:
+	}])
+
 //select a word from the secretWords array
 var wordSelected = function(){
-	gameWords[Math.floor(Math.random() * gameWords.length)];
-	console.log(gameWords);
-	lettersInSecretWord = gameWords.split("");
+	console.log(secretWord);
+	letters = secretWord.split("");
+	lettersInSecretWord.push(letters);
 	numBlanks = lettersInSecretWord.length;
 	for(var i = 0; i < numBlanks; i++) {
 		blanksAndLetters.push("_");
@@ -49,18 +66,7 @@ var wordSelected = function(){
 	}
 };
 
-var validation = new validator(userInput, alpha);
-
-
 //look to see if the letter guessed has already been guessed
-if (lettersGuessed === userInput) {
-	console.log("You've already guessed this letter, please choose again");
-}
-else {
-	letttersGuessed.push(userInput);//fs.appendFile(textFile, userInput)
-	console.log("You guessed correct, pick another letter");
-};
-
 
 //does the letter input match any letters in the secretWord
 
@@ -89,9 +95,8 @@ function checkLetters(letter) {
     }
   }
 
-  // If the letter exists somewhere in the word,
-  // then figure out exactly where (which indices).
-  if (letterInWord) {
+  // If the letter exists somewhere in the word, figure out where
+   if (letterInWord) {
 
     // Loop through the word
     for (var j = 0; j < numBlanks; j++) {
@@ -105,17 +110,14 @@ function checkLetters(letter) {
       }
     }
 
-    // Log the current blanks and successes for testing.
+    // Log the current blanks and letters.
     console.log(blanksAndLetters);
   }
 
   // If the letter doesn't exist at all...
   else {
 
-    // Then we add the letter to the list of wrong letters.
-    lettersGuessed.push(letter);
-
-    // We also subtract one of the guesses.
+    // We subtract one of the guesses.
     guessesTotal--;
 
   }
@@ -124,11 +126,6 @@ function checkLetters(letter) {
 
 function roundComplete() {
 
-  // First, log an initial status update in the console
-  // telling us how many wins, losses, and guesses are left.
-  console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
-
-  
   // If our hangman string equals the solution.
   // (meaning that we guessed all the letters to match the solution)...
   if (lettersInChosenWord.toString() === blanksAndLetters.toString()) {
@@ -138,10 +135,27 @@ function roundComplete() {
 
     // Give the user an alert
     console.log("You win!");
+    inquirer
+    	.prompt([
+    	{	
+    		type:"confirm",
+    		name: "play again"
+    		message: "Would you like to play again?",
+    		default: true
+    	}	
+	])
+    .then(function(inquirerResponse){
+    	if(inquirerResponse.confirm){
+    		console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
+    		startGame();
+    	}
+    	else{
+    		console.log("Come back another day to play")
+    		process.exit();
+    	}
+    })
 
-    // Restart the game
-    startGame();
-  }
+   }
 
   // If we've run out of guesses
   else if (guessesTotal === 0) {
@@ -150,17 +164,34 @@ function roundComplete() {
     lossCounter++;
 
     // Give the user an alert
-    alert("You lose");
+    console.log("You lose");
 
-    // Update the loss counter in the HTML
-    document.getElementById("loss-counter").innerHTML = lossCounter;
+    inquirer
+    	.prompt([
+    	{	
+    		type:"confirm",
+    		name: "play again"
+    		message: "Would you like to play again?",
+    		default: true
+    	}	
+	])
+    .then(function(inquirerResponse){
+    	if(inquirerResponse.confirm){
+    		console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
+    		startGame();
+    	}
+    	else{
+    		console.log("Come back another day to play");
+    		console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
+    		process.exit();
+    	}
+    })
 
-    // Restart the game
-    startGame();
+   }
 
-  }
+ }
 
-}
+
 
 // MAIN PROCESS (THIS IS THE CODE THAT CONTROLS WHAT IS ACTUALLY RUN)
 // ==================================================================
