@@ -66,19 +66,7 @@ var wordSelected = function(){
 	}
 };
 
-//look to see if the letter guessed has already been guessed
 
-//does the letter input match any letters in the secretWord
-
-// compare letters in the word to the letter guessed
-
-//create letter specific logic
-
-//keep track 0f uders remaining guesses
-
-//prompt user if they want to end the game
-
-//each constructor in its own file
 
 function checkLetters(letter) {
 
@@ -193,8 +181,7 @@ function roundComplete() {
 
 
 
-// MAIN PROCESS (THIS IS THE CODE THAT CONTROLS WHAT IS ACTUALLY RUN)
-// ==================================================================
+
 
 // Starts the Game by running the startGame() function
 // startGame();
@@ -211,3 +198,18 @@ function roundComplete() {
 //   // Runs the code that ends each round.
 //   roundComplete();
 // };
+
+
+//look to see if the letter guessed has already been guessed
+
+//does the letter input match any letters in the secretWord
+
+// compare letters in the word to the letter guessed
+
+//create letter specific logic
+
+//keep track 0f uders remaining guesses
+
+//prompt user if they want to end the game
+
+//each constructor in its own file
