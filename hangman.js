@@ -6,11 +6,16 @@ var validator = require("validatorjs");
 //create a JSON that holds words
 var gameWords = require("./wordsGame.js")
 
+console.log("Welcome to Hangman using Node");
+
 // receive user input *works*
 var userInput = process.argv[2];
 
+var letterGuessed = [];
+
 // word selected from gameWords
 var secretWord = gameWords[Math.floor(Math.random() * gameWords.length)];
+// console.log(secretWord) *works*
 
 //breakup the secretWord into letters
 var lettersInSecretWord = [];
@@ -29,34 +34,51 @@ var guessesTotal = 8;
 var winsCounter = 0;
 var lossCounter = 0;
 
-var schema = {
-	properties: {
-		pattern: /^[a-zA-Z\-]+$/,
-		message: "Selection must be only letters or spaces",
-		required: true
-	}
+// var schema = {
+// 	properties: {
+// 		pattern: /^[a-zA-Z\-]+$/,
+// 		message: "Selection must be only letters or spaces",
+// 		required: true
+// 	}
+// };
+
+var questions = [
+  {
+    type: "input",
+    name: "letter",
+    message: "Please guess a letter",
+    validate: function(value){
+      var pass = value.match (/^[a-zA-Z\-]+$/);
+      if (pass) {
+        return true;
+      }
+      return "Selection must only be letters or spaces"
+    }
+  },
+  {
+    type: "confirm",
+    name: "askAgain",
+    message: "Do you want to guess another letter(just hit enter for Yes)?",
+    default: true
+  }
+
+  ];
+
+function playGame() {
+  wordSelected();
+  inquirer.prompt(questions).then(answers => {
+    console.log(JSON.stringify(answers, null, ' '));
+    checkLetters();
+    letterGuessed.push(answers.letter);
+
+  })
 };
 
-function startGame() {
-	prompt.start();
-
-	//create the game prompt.
-	prompt.get(schema, function (err,result) {
-		if(err){
-			return console.log(err);
-		}
-		
-
-
-
-	}
-	{
-		type:
-	}])
+playGame();
 
 //select a word from the secretWords array
-var wordSelected = function(){
-	console.log(secretWord);
+function wordSelected() {
+	// console.log(secretWord);
 	letters = secretWord.split("");
 	lettersInSecretWord.push(letters);
 	numBlanks = lettersInSecretWord.length;
@@ -123,17 +145,13 @@ function roundComplete() {
 
     // Give the user an alert
     console.log("You win!");
-    inquirer
-    	.prompt([
-    	{	
+    inquirer.prompt({	
     		type:"confirm",
-    		name: "play again"
+    		name: "play again",
     		message: "Would you like to play again?",
     		default: true
-    	}	
-	])
-    .then(function(inquirerResponse){
-    	if(inquirerResponse.confirm){
+    	}).then(function(answers){
+    	if(answers.confirm){
     		console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
     		startGame();
     	}
@@ -154,17 +172,13 @@ function roundComplete() {
     // Give the user an alert
     console.log("You lose");
 
-    inquirer
-    	.prompt([
-    	{	
+    inquirer.prompt({	
     		type:"confirm",
-    		name: "play again"
+    		name: "play again",
     		message: "Would you like to play again?",
     		default: true
-    	}	
-	])
-    .then(function(inquirerResponse){
-    	if(inquirerResponse.confirm){
+    	}).then(function(answers2){
+    	if(answers2.confirm){
     		console.log("Games One: " + winCounter + " | Games Lost: " + lossCounter + " | guessesTotal: " + guessesTotal);
     		startGame();
     	}
@@ -177,7 +191,9 @@ function roundComplete() {
 
    }
 
- }
+ };
+
+ roundComplete();
 
 
 
